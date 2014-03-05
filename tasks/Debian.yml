@@ -1,0 +1,19 @@
+---
+- name: Ensure interfaces.d exist
+  file: path=/etc/network/interfaces.d  state=directory
+  tags: [configuration,network]
+
+- name: Ensure interfaces.d is source in interfaces
+  lineinfile:
+     regexp="^source\ \/etc\/network\/interfaces.d\/\*"
+     line="source /etc/network/interfaces.d/*"
+     dest=/etc/network/interfaces
+     state=present
+     insertafter=EOF
+  notify: reload networking Debian
+  tags: [configuration,network]
+
+- name: Ensure dummy are configured
+  template: src=Debian/dummy.j2 dest=/etc/network/interfaces.d/dummy
+  notify: reload networking Debian
+  tags: [configuration,network]

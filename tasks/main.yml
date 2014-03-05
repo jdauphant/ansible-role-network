@@ -1,0 +1,24 @@
+---
+- name: Ensure dummy module is on startup
+  lineinfile: >
+     regexp="^dummy numdummies={{network_dummies_number}}"
+     line="dummy numdummies={{network_dummies_number}}"
+     dest=/etc/modules
+     state=present
+     insertafter=EOF
+  register: dummymodule
+  tags: [configuration,network]
+
+- name: Ensure dummy module is unloaded
+  modprobe: name="dummy" state=absent
+  when: dummymodule | changed
+  tags: [configuration,network]
+
+- name: Ensure dummy module is loaded
+  modprobe: >
+    name="dummy" params="numdummies={{network_dummies_number}}" state=present
+  tags: [configuration,network]
+
+- include: Debian.yml
+  when: ansible_os_family == 'Debian'
+
