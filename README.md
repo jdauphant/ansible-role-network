@@ -1,4 +1,4 @@
 ansible-role-network
 ====================
 
-Network Configuration For Ansible
+Ansible role for network configuration
