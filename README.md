@@ -6,6 +6,9 @@ Ansible role for network configuration
 # Notes
 !!! This role need a modification for the modprobe module available here : https://github.com/jdauphant/ansible/blob/devel/library/system/modprobe !!!
 
+# Support
+- Dummies interfaces
+
 # Compatible
 - Debian family
 
