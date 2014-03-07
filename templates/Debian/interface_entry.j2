@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+
+auto {{ item.name }}
+iface {{ item.name }} inet {{ item.type }}
+{% if item.address is defined %}    address {{item.address}}{% endif %}
+{% if item.netmask is defined %}    netmask {{item.netmask}}{% endif %}
+{% if item.gateway is defined %}    gateway {{item.gateway}}{% endif %}
+{% if item.dns is defined %}    dns-nameservers : {% for dns in item.dns %}{{dns}} {% endfor %}{% endif %}
+

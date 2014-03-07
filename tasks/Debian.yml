@@ -3,17 +3,33 @@
   file: path=/etc/network/interfaces.d  state=directory
   tags: [configuration,network]
 
-- name: Ensure interfaces.d is source in interfaces
-  lineinfile:
-     regexp="^source\ \/etc\/network\/interfaces.d\/\*"
-     line="source /etc/network/interfaces.d/*"
-     dest=/etc/network/interfaces
-     state=present
-     insertafter=EOF
+- name: Ensure /etc/network/interface are configured
+  template: src=Debian/interfaces.j2 dest=/etc/network/interfaces backup=yes
   notify: reload networking Debian
+  with_items: network_interfaces
+  tags: [configuration,network]
+
+- name: Ensure interface are configured
+  template: src=Debian/interface_entry.j2 dest=/etc/network/interfaces.d/if-{{item.name}}
+  notify: reload networking Debian
+  with_items: network_interfaces
   tags: [configuration,network]
 
 - name: Ensure dummy are configured
   template: src=Debian/dummy.j2 dest=/etc/network/interfaces.d/dummy
   notify: reload networking Debian
   tags: [configuration,network]
+
+- name: Check interfaces  in disabled list are disabled
+  shell: ifconfig {{item}}
+  register: ifconfig_result
+  changed_when: "'UP ' in ifconfig_result.stdout"
+  with_items: network_interfaces_disabled
+  tags: [configuration,network]
+
+- name: Disabled UP interfaces in disabled list
+  shell: ifconfig {{item.item}} down
+  when: ifconfig_result.changed
+  with_items: ifconfig_result.results
+  tags: [configuration,network]
+

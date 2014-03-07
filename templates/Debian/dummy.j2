@@ -4,6 +4,6 @@
 auto dummy{{ loop.index0 }}
 iface dummy{{ loop.index0 }} inet static
         address {{dummy.address}}
-        netmask {{dummy.network}}
+        netmask {{dummy.netmask}}
 
 {% endfor %}

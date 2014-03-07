@@ -1,3 +1,10 @@
 ---
+network_interfaces:
+     -  name: "eth0"
+        type: "dhcp"
+
 network_dummies: []
 network_dummies_number: "{{network_dummies|length}}"
+
+
+network_interfaces_disabled: []
