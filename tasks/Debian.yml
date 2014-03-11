@@ -6,7 +6,6 @@
 - name: Ensure /etc/network/interface are configured
   template: src=Debian/interfaces.j2 dest=/etc/network/interfaces backup=yes
   notify: reload networking Debian
-  with_items: network_interfaces
   tags: [configuration,network]
 
 - name: Ensure interface are configured
