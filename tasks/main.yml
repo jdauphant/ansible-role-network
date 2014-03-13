@@ -1,7 +1,7 @@
 ---
 - name: Ensure dummy module is on startup
   lineinfile: >
-     regexp="^dummy numdummies={{network_dummies_number}}"
+     regexp="^dummy"
      line="dummy numdummies={{network_dummies_number}}"
      dest=/etc/modules
      state=present
