@@ -24,6 +24,7 @@
   register: ifconfig_result
   changed_when: "'UP ' in ifconfig_result.stdout"
   with_items: network_interfaces_disabled
+  always_run: yes
   tags: [configuration,network]
 
 - name: Disabled UP interfaces in disabled list
