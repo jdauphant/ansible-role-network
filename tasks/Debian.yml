@@ -21,20 +21,34 @@
 
 - name: Check interfaces  in disabled list are disabled
   shell: ifconfig {{item}}
-  register: ifconfig_result
-  changed_when: "'UP ' in ifconfig_result.stdout"
+  register: ifconfig_result_down
+  changed_when: "'UP ' in ifconfig_result_down.stdout"
   with_items: network_interfaces_disabled
   always_run: yes
   tags: [configuration,network]
 
 - name: Disabled UP interfaces in disabled list
   shell: ifconfig {{item.item}} down
-  when: ifconfig_result.changed
-  with_items: ifconfig_result.results
+  when: ifconfig_result_down.changed
+  with_items: ifconfig_result_down.results
   tags: [configuration,network]
 
 - name: Ensure disabled interface are not configured
   file: path=/etc/network/interfaces.d/if-{{item}} state=absent
   notify: restart networking Debian
   with_items: network_interfaces_disabled
+  tags: [configuration,network]
+
+- name: Check all interfaces are UP
+  shell: ifconfig {{item.name}}
+  register: ifconfig_result_up
+  changed_when: "'UP ' not in ifconfig_result_up.stdout"
+  with_items: network_interfaces
+  always_run: yes
+  tags: [configuration,network]
+
+- name: Ensure all enable interfaces are UP
+  shell: ifconfig {{item.item}} up
+  when: ifconfig_result_up.changed
+  with_items: ifconfig_result_up.results
   tags: [configuration,network]
