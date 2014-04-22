@@ -3,11 +3,6 @@
   file: path=/etc/network/interfaces.d  state=directory
   tags: [configuration,network]
 
-- name: Ensure /etc/network/interface are configured
-  template: src=Debian/interfaces.j2 dest=/etc/network/interfaces backup=yes
-  notify: restart networking Debian
-  tags: [configuration,network]
-
 - name: Ensure interface are configured
   template: src=Debian/interface_entry.j2 dest=/etc/network/interfaces.d/if-{{item.name}}
   notify: restart networking Debian
@@ -16,6 +11,12 @@
 
 - name: Ensure dummy are configured
   template: src=Debian/dummy.j2 dest=/etc/network/interfaces.d/dummy
+  notify: restart networking Debian
+  when: network_dummies_number > 0
+  tags: [configuration,network]
+
+- name: Ensure /etc/network/interface are configured
+  template: src=Debian/interfaces.j2 dest=/etc/network/interfaces backup=yes
   notify: restart networking Debian
   tags: [configuration,network]
 
