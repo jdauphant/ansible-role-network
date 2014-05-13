@@ -49,7 +49,7 @@
   tags: [configuration,network]
 
 - name: Ensure all enable interfaces are UP
-  shell: ifconfig {{item.item}} up
+  shell: ifconfig {{item.item.name}} up
   when: ifconfig_result_up.changed
   with_items: ifconfig_result_up.results
   tags: [configuration,network]
