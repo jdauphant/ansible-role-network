@@ -7,18 +7,18 @@
      state=present
      insertafter=EOF
   register: dummymodule
-  when: network_dummies_number > 0
+  when: network_dummies_number != 0
   tags: [configuration,network]
 
 - name: Ensure dummy module is unloaded
   modprobe: name="dummy" state=absent
-  when: network_dummies_number > 0 and dummymodule | changed
+  when: network_dummies_number != 0 and dummymodule | changed
   tags: [configuration,network]
 
 - name: Ensure dummy module is loaded
   modprobe: >
     name="dummy" params="numdummies={{network_dummies_number}}" state=present
-  when: network_dummies_number > 0
+  when: network_dummies_number != 0
   tags: [configuration,network]
 
 - include: Debian.yml
